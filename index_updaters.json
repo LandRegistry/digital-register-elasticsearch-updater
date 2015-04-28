@@ -1,0 +1,16 @@
+{
+    "index_updaters": {
+        "property-by-postcode-v1-updater": {
+            "index_name": "landregistry",
+            "doc_type": "property_by_postcode"
+        },
+        "property-by-postcode-v2-updater": {
+            "index_name": "landregistry",
+            "doc_type": "property_by_postcode_2"
+        },
+        "property-by-address-v1-updater": {
+            "index_name": "landregistry",
+            "doc_type": "property_by_address"
+        }
+    }
+}
