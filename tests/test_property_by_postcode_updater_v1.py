@@ -82,7 +82,7 @@ class TestPropertyByPostcodeUpdaterV1:
             updater = PropertyByPostcodeUpdaterV1()
             updater.initialise(index_name, doc_type)
             returned_actions = updater.prepare_elasticsearch_actions(deleted_title)
-            
+
             mock_get_delete_action.assert_called_once_with(index_name, doc_type, title_id)
 
             assert returned_actions == [{'delete': 'action1'}]
@@ -113,7 +113,8 @@ class TestPropertyByPostcodeUpdaterV1:
 
             assert returned_actions == [{'upsert': 'action1'}]
 
-    @mock.patch('service.updaters.property_by_postcode_updater_v1.get_next_data_page', return_value=[])
+    @mock.patch(
+        'service.updaters.property_by_postcode_updater_v1.get_next_data_page', return_value=[])
     def test_update_status_affects_the_arguments_to_get_next_source_data_page(
             self, mock_get_next_page):
 

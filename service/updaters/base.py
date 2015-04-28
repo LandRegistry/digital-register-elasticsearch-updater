@@ -5,9 +5,10 @@ import logging
 
 LOGGER = logging.getLogger(__name__)
 
+
 class AbstractIndexUpdater():
     """Base class for elasticsearch data updaters - enforces the right interface"""
-    
+
     __metaclass__ = ABCMeta
 
     _id = None
@@ -15,7 +16,7 @@ class AbstractIndexUpdater():
     @property
     def id(self):
         return self._id
-    
+
     @id.setter
     def id(self, value):
         self._id = value

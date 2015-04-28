@@ -12,6 +12,7 @@ INDEX_LOAD_RESULT = {
     'last_updated_title_number': 'title123'
 }
 
+
 class TestPropertyByAddressUpdaterV1:
 
     def test_initialise_loads_state(self):
@@ -31,7 +32,8 @@ class TestPropertyByAddressUpdaterV1:
 
             mock_load.assert_called_once_with(index_name, doc_type)
 
-    @mock.patch('service.updaters.property_by_address_updater_v1.get_next_data_page', return_value=[])
+    @mock.patch(
+        'service.updaters.property_by_address_updater_v1.get_next_data_page', return_value=[])
     def test_get_next_source_data_page_calls_page_reader_with_right_args(self, mock_get_page):
         last_title_number = 'title123'
         last_modification_date = datetime.now()
@@ -51,7 +53,7 @@ class TestPropertyByAddressUpdaterV1:
             mock_get_page.assert_called_once_with(
                 last_title_number, last_modification_date, page_size
             )
-                
+
     def test_get_next_source_data_page_returns_result_from_page_reader(self):
         title1 = MockTitleRegisterData('TTL1', {'register': 'data1'}, datetime.now(), False)
         title2 = MockTitleRegisterData('TTL2', {'register': 'data2'}, datetime.now(), False)
@@ -96,7 +98,7 @@ class TestPropertyByAddressUpdaterV1:
         updated_title = MockTitleRegisterData('TTL1', register_data, entry_datetime, False)
         title_id = 'TTL1-ADDRESS_STRING_1'
         doc = {
-            'title_number': 'TTL1', 
+            'title_number': 'TTL1',
             'entry_datetime': '2015-04-20T12:23:34.000+00',
             'address_string': 'address string 1'
         }
@@ -111,33 +113,34 @@ class TestPropertyByAddressUpdaterV1:
 
             assert returned_actions == [{'upsert': 'action1'}]
 
-    @mock.patch('service.updaters.property_by_address_updater_v1.get_next_data_page', return_value=[])
+    @mock.patch(
+        'service.updaters.property_by_address_updater_v1.get_next_data_page', return_value=[])
     def test_update_status_affects_the_arguments_to_get_next_source_data_page(
             self, mock_get_next_page):
-        
+
         last_title_date = datetime(2015, 4, 2)
         last_title_number = 'TTL2'
         page_size = 123
-        
+
         title1 = MockTitleRegisterData('TTL1', {'register': 'data1'}, datetime(2015, 4, 1), False)
         title2 = MockTitleRegisterData(
             last_title_number, {'register': 'data2'}, last_title_date, False
         )
-        
+
         data_page = [title1, title2]
-        
+
         updater = PropertyByAddressUpdaterV1()
-        
+
         with mock.patch('service.es_status_loader.load_index_update_status',
-                        return_value=INDEX_LOAD_RESULT):            
+                        return_value=INDEX_LOAD_RESULT):
             updater.initialise('index_name1', 'doc_type1')
-        
+
         updater.update_status(data_page)
         updater.get_next_source_data_page(page_size)
-        
+
         # check if next data page is requested based on the last updated title
         mock_get_next_page.assert_called_once_with(last_title_number, last_title_date, page_size)
-    
+
     def test_get_mapping_returns_correct_mapping(self):
         assert PropertyByAddressUpdaterV1().get_mapping() == {
             'properties': {

@@ -11,6 +11,7 @@ from service import es_status_loader
 LOGGER = logging.getLogger(__name__)
 POSTCODE_REGEX = r'[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z]{2}'
 
+
 class PropertyByPostcodeUpdaterV2(AbstractIndexUpdater):
     """elasticsearch data updater for property_by_postcode doc type in version 2"""
 
@@ -25,7 +26,7 @@ class PropertyByPostcodeUpdaterV2(AbstractIndexUpdater):
         self.doc_type = doc_type
         self._load_status()
 
-    def get_next_source_data_page(self, page_size):        
+    def get_next_source_data_page(self, page_size):
         if self.last_title_modification_date is None:
             LOGGER.warn("Unknown index update status for index '{}', doc type '{}'".format(
                 self.index_name, self.doc_type
@@ -109,6 +110,6 @@ class PropertyByPostcodeUpdaterV2(AbstractIndexUpdater):
             postcodes = re.findall(POSTCODE_REGEX, address_str)
             return postcodes
         return None
-    
+
     def _normalise_postcode(self, postcode):
         return re.sub('\\s+', '', postcode)

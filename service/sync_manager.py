@@ -30,11 +30,11 @@ def start():
     global indexes
     global updater_statuses
     global index_updaters
-    
+
     LOGGER.info("Scheduling index synchronisation to take place every {} seconds".format(
         polling_interval_in_secs
     ))
-    
+
     indexes = _get_index_data_from_config()
     updater_statuses = {updater_id: UPDATER_STATUS_IDLE for updater_id in indexes}
     index_updaters = [_get_updater(updater_id) for updater_id in indexes]
@@ -44,7 +44,7 @@ def start():
         _initialise_index_updater(updater)
 
     _schedule_data_synchronisation()
-    
+
     LOGGER.info('Index synchronisation scheduled')
 
 
@@ -60,14 +60,14 @@ def _schedule_data_synchronisation():
 
 def _get_updater(updater_id):
     """Gets and instance of the right elasticsearch updater, based on the ID"""
-    
+
     updaters_creators = {
         'property-by-postcode-v1-updater':
-            lambda : PropertyByPostcodeUpdaterV1(),
+            lambda: PropertyByPostcodeUpdaterV1(),
         'property-by-postcode-v2-updater':
-            lambda : PropertyByPostcodeUpdaterV2(),
+            lambda: PropertyByPostcodeUpdaterV2(),
         'property-by-address-v1-updater':
-            lambda : PropertyByAddressUpdaterV1()
+            lambda: PropertyByAddressUpdaterV1()
     }
 
     creator = updaters_creators.get(updater_id)
@@ -92,33 +92,33 @@ def _initialise_index_updater(index_updater):
 # method to be scheduled - synchronisation of all indexes
 def _synchronise_es_indexes_with_source():
     LOGGER.info('Starting index synchronisation')
-    
+
     try:
         for index_updater in index_updaters:
             if not _is_index_updater_busy(index_updater):
                 _trigger_index_synchronisation(index_updater)
             else:
                 LOGGER.info("Updater '{}' is busy - skipping".format(index_updater.id))
-                
+
         LOGGER.info('Index synchronisation started')
     except Exception as e:
         LOGGER.error('An error occurred when starting index synchronisation', e)
-    
-            
+
+
 def _trigger_index_synchronisation(index_updater):
     LOGGER.info("Starting data synchronisation using updater '{}'".format(index_updater.id))
 
     t = threading.Thread(
         target=_synchronise_index_with_source,
-        args = (index_updater,)
+        args=(index_updater,)
     )
     t.daemon = True
     t.start()
 
-    
+
 def _synchronise_index_with_source(index_updater):
     _update_index_updater_status(index_updater, busy=True)
-    
+
     try:
         synchroniser.synchronise_index_with_source(
             index_updater, _get_index_name(index_updater), _get_doc_type(index_updater)

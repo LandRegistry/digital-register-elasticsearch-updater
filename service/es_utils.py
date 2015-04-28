@@ -24,8 +24,10 @@ def ensure_mapping_exists(index_name, doc_type, mapping):
     else:
         LOGGER.info("Index '{}' with doc type '{}' already exists".format(index_name, doc_type))
 
-    LOGGER.info("Ensuring mapping exists for index '{}', doc type '{}'".format(index_name, doc_type))
-    
+    LOGGER.info("Ensuring mapping exists for index '{}', doc type '{}'".format(
+        index_name, doc_type
+    ))
+
     indices_client.put_mapping(
         index=index_name, doc_type=doc_type, body=mapping,
     )
@@ -39,7 +41,7 @@ def search(query_dict, index_name, doc_type):
     result = elasticsearch_client.search(
         index=index_name, doc_type=doc_type, body=query_dict
     )
-    
+
     return result['hits']['hits']
 
 

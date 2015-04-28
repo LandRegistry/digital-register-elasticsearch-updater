@@ -113,7 +113,8 @@ class TestPropertyByPostcodeUpdaterV1:
 
             assert returned_actions == [{'upsert': 'action1'}]
 
-    @mock.patch('service.updaters.property_by_postcode_updater_v2.get_next_data_page', return_value=[])
+    @mock.patch(
+        'service.updaters.property_by_postcode_updater_v2.get_next_data_page', return_value=[])
     def test_update_status_affects_the_arguments_to_get_next_source_data_page(
             self, mock_get_next_page):
 

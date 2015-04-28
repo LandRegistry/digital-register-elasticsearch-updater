@@ -28,7 +28,7 @@ class PropertyByAddressUpdaterV1(AbstractIndexUpdater):
         self.doc_type = doc_type
         self._load_status()
 
-    def get_next_source_data_page(self, page_size):                
+    def get_next_source_data_page(self, page_size):
         if self.last_title_modification_date is None:
             LOGGER.warn("Unknown index update status for index '{}', doc type '{}'".format(
                 self.index_name, self.doc_type
@@ -62,7 +62,7 @@ class PropertyByAddressUpdaterV1(AbstractIndexUpdater):
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
                 'address_string': {'type': 'string', 'index': 'not_analyzed'},
-                'entry_datetime': {'type': 'date',                                   
+                'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
                                    'index': 'no'},
             }
@@ -97,7 +97,7 @@ class PropertyByAddressUpdaterV1(AbstractIndexUpdater):
         id = '{}-{}'.format(title_number, address_string.upper())
         normalised_id = re.sub('\\s+', '_', id)
         return normalised_id
-    
+
     def _get_address_string(self, title):
         address_string = title.register_data['address']['address_string']
         normalised_address_string = re.sub('[,()]', '', address_string)

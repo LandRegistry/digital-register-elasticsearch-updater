@@ -14,7 +14,7 @@ POSTCODE_REGEX = r'[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z]{2}'
 
 class PropertyByPostcodeUpdaterV1(AbstractIndexUpdater):
     """elasticsearch data updater for property_by_postcode doc type in version 1"""
-    
+
     last_title_modification_date = None
     last_updated_title_number = None
     last_sync_time = None
@@ -26,24 +26,23 @@ class PropertyByPostcodeUpdaterV1(AbstractIndexUpdater):
         self.doc_type = doc_type
         self._load_status()
 
-    def get_next_source_data_page(self, page_size):                
+    def get_next_source_data_page(self, page_size):
         if self.last_title_modification_date is None:
             LOGGER.warn("Unknown index update status for index '{}', doc type '{}'".format(
                 self.index_name, self.doc_type
             ))
             self._load_status()
 
-
         self.last_sync_time = datetime.now()
 
         source_data_page = get_next_data_page(
-            self.last_updated_title_number, 
+            self.last_updated_title_number,
             self.last_title_modification_date,
             page_size,
         )
 
         return source_data_page
-     
+
     def prepare_elasticsearch_actions(self, title):
         if title.is_deleted:
             return self._prepare_delete_actions(title)
@@ -72,7 +71,7 @@ class PropertyByPostcodeUpdaterV1(AbstractIndexUpdater):
         index_update_status = es_status_loader.load_index_update_status(
             self.index_name, self.doc_type
         )
-        
+
         self.last_title_modification_date = index_update_status['last_modification_date']
         self.last_updated_title_number = index_update_status['last_updated_title_number']
 
@@ -82,21 +81,21 @@ class PropertyByPostcodeUpdaterV1(AbstractIndexUpdater):
             return es_utils.get_delete_action(self.index_name, self.doc_type, id)
 
         return [get_action(postcode) for postcode in self._get_postcodes(title.register_data)]
-    
+
     def _prepare_upsert_actions(self, title):
         def get_action(postcode):
             id = self._get_document_id(title.title_number, postcode)
-            
+
             document = {
                 'title_number': title.title_number,
                 'entry_datetime': title.last_modified.strftime('%y-%m-%dT%H:%M:%S+00'),
                 'postcode': postcode,
             }
-            
+
             return es_utils.get_upsert_action(self.index_name, self.doc_type, document, id)
 
         return [get_action(postcode) for postcode in self._get_postcodes(title.register_data)]
-    
+
     def _get_document_id(self, title_number, postcode):
         return '{}-{}'.format(title_number, postcode.upper())
 
@@ -105,7 +104,7 @@ class PropertyByPostcodeUpdaterV1(AbstractIndexUpdater):
         postcode = address_dict.get('postcode')
         if postcode:
             return [postcode]
-        
+
         address_str = address_dict.get('address_string', None)
         if address_str:
             postcodes = re.findall(POSTCODE_REGEX, address_str)

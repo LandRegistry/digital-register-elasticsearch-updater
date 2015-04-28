@@ -3,6 +3,7 @@ from service import es_utils
 
 # TODO: partly to be replaced by proper integration tests
 
+
 class TestEsUtils:
 
     @mock.patch(
@@ -54,7 +55,7 @@ class TestEsUtils:
     def test_execute_elasticsearch_actions_returns_execution_result(self):
         expected_result = (123, ['error1'])
 
-        with mock.patch('service.es_utils.bulk', return_value = expected_result):
+        with mock.patch('service.es_utils.bulk', return_value=expected_result):
             result = es_utils.execute_elasticsearch_actions([])
 
             assert result == expected_result
@@ -75,22 +76,22 @@ class TestEsUtils:
 
         with mock.patch(
                 'service.es_utils.elasticsearch_client.search',
-                return_value = search_result
+                return_value=search_result
         ):
             result = es_utils.search({'query': 'dict'}, 'index_name', 'doc_type')
 
             assert result == hits
 
     def test_get_upsert_action_returns_action_with_the_right_content(self):
-        result = es_utils.get_upsert_action('index_name1', 'doc_type1', {'document': 'body1'}, 'id1')
+        result = es_utils.get_upsert_action('idx_name1', 'doc_type1', {'doc': 'body1'}, 'id1')
 
         assert result == {
             'doc_as_upsert': True,
             '_op_type': 'update',
-            '_index': 'index_name1',
+            '_index': 'idx_name1',
             '_type': 'doc_type1',
             '_id': 'id1',
-            'doc': {'document': 'body1'},
+            'doc': {'doc': 'body1'},
         }
 
     def test_get_delete_action_returns_action_with_the_right_content(self):

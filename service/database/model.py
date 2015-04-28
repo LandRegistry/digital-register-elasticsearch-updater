@@ -4,7 +4,9 @@ from sqlalchemy import Column, DateTime, String, Boolean
 
 Base = declarative_base()
 
-# In case of a schema change, a new model should be created and used by whatever needs it, leaving this one unchanged
+
+# In case of a schema change, a new model should be created and used by whatever
+#  needs it, leaving this one unchanged
 class TitleRegisterData(Base):
     __tablename__ = 'title_register_data'
 

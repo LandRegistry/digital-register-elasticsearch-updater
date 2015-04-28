@@ -17,7 +17,7 @@ def synchronise_index_with_source(index_updater, index_name, doc_type):
         )
     )
 
-    if _bring_index_up_to_date(index_updater, index_name, doc_type):
+    if _bring_index_up_to_date(index_updater):
         LOGGER.info("Updater '{}' - finished synchronising index '{}', doc type '{}'".format(
             index_updater.id, index_name, doc_type
         ))
@@ -27,7 +27,7 @@ def synchronise_index_with_source(index_updater, index_name, doc_type):
         ))
 
 
-def _bring_index_up_to_date(index_updater, index_name, doc_type):
+def _bring_index_up_to_date(index_updater):
     is_up_to_date_with_source = False
 
     while not is_up_to_date_with_source:
@@ -37,14 +37,20 @@ def _bring_index_up_to_date(index_updater, index_name, doc_type):
             LOGGER.error("Elasticsearch update resulted with errors: {}".format(errors))
             return False
         else:
-            LOGGER.info("Updated elasticsearch with page of data. Updater: '{}'".format(index_updater.id))
+            LOGGER.info("Updated elasticsearch with page of data. Updater: '{}'".format(
+                index_updater.id
+            ))
 
             if data_page:
                 index_updater.update_status(data_page)
-                LOGGER.info("Updated synchronisation status for updater '{}'".format(index_updater.id))
+                LOGGER.info("Updated synchronisation status for updater '{}'".format(
+                    index_updater.id
+                ))
 
             if len(data_page) < page_size:
-                LOGGER.info("Updater '{}' is up to date with source data store".format(index_updater.id))
+                LOGGER.info("Updater '{}' is up to date with source data store".format(
+                    index_updater.id
+                ))
                 is_up_to_date_with_source = True
 
     return True
