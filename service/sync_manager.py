@@ -102,7 +102,7 @@ def _synchronise_es_indexes_with_source():
 
         LOGGER.info('Index synchronisation started')
     except Exception as e:
-        LOGGER.error('An error occurred when starting index synchronisation', e)
+        LOGGER.error('An error occurred when starting index synchronisation', exc_info=e)
 
 
 def _trigger_index_synchronisation(index_updater):
@@ -128,7 +128,7 @@ def _synchronise_index_with_source(index_updater):
             "An error occurred when updating elasticsearch using updater '{}'".format(
                 index_updater.id
             ),
-            e
+            exc_info=e
         )
     finally:
         _update_index_updater_status(index_updater, busy=False)

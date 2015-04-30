@@ -33,25 +33,25 @@ def _bring_index_up_to_date(index_updater):
     while not is_up_to_date_with_source:
         data_page, errors = _populate_index_with_data_page(index_updater)
 
-        if errors:
-            LOGGER.error("Elasticsearch update resulted with errors: {}".format(errors))
-            return False
-        else:
-            LOGGER.info("Updated elasticsearch with page of data. Updater: '{}'".format(
+        # TODO: investigate what types of errors to handle -
+        # I've found 'not found' on deletions and 'conflict' on insert/updates, but they were
+        # only informational - the updates took place
+
+        LOGGER.info("Updated elasticsearch with page of data. Updater: '{}'".format(
+            index_updater.id
+        ))
+
+        if data_page:
+            index_updater.update_status(data_page)
+            LOGGER.info("Updated synchronisation status for updater '{}'".format(
                 index_updater.id
             ))
 
-            if data_page:
-                index_updater.update_status(data_page)
-                LOGGER.info("Updated synchronisation status for updater '{}'".format(
-                    index_updater.id
-                ))
-
-            if len(data_page) < page_size:
-                LOGGER.info("Updater '{}' is up to date with source data store".format(
-                    index_updater.id
-                ))
-                is_up_to_date_with_source = True
+        if len(data_page) < page_size:
+            LOGGER.info("Updater '{}' is up to date with source data store".format(
+                index_updater.id
+            ))
+            is_up_to_date_with_source = True
 
     return True
 

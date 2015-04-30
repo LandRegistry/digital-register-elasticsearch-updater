@@ -56,27 +56,3 @@ class TestSynchroniser:
 
         assert mock_updater.update_status.mock_calls == [call([title1, title2]), call([title3])]
         assert len(mock_execute_es_actions.mock_calls) == 2
-
-    @mock.patch('service.es_utils.execute_elasticsearch_actions', return_value=(1, ['error']))
-    def test_synchronise_index_with_source_stops_on_elasticsearch_error(
-            self, mock_execute_es_actions):
-
-        synchroniser.page_size = 1
-
-        title1 = MockTitleRegisterData('TTL1', {'register': 'data1'}, datetime.now(), False)
-        title2 = MockTitleRegisterData('TTL2', {'register': 'data2'}, datetime.now(), False)
-
-        mock_updater = MagicMock()
-
-        # There are two pages of data, but we expect only the first one to be processed
-        mock_updater.get_next_source_data_page.side_effect = [[title1], [title2]]
-        mock_updater.prepare_elasticsearch_actions.return_value = [{'update': 'action1'}]
-
-        synchroniser.synchronise_index_with_source(mock_updater, 'index_name1', 'doc_type1')
-
-        assert len(mock_updater.get_next_source_data_page.mock_calls) == 1
-
-        assert mock_updater.prepare_elasticsearch_actions.mock_calls == [call(title1)]
-
-        assert mock_updater.update_status.mock_calls == []
-        assert len(mock_execute_es_actions.mock_calls) == 1
