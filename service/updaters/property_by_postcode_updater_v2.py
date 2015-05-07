@@ -58,7 +58,7 @@ class PropertyByPostcodeUpdaterV2(AbstractIndexUpdater):
         return {
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
-                'postcode': {'type': 'string', 'index': 'no'},
+                'postcode': {'type': 'string', 'index': 'not_analyzed'},
                 'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
                                    'index': 'no'},
