@@ -61,7 +61,7 @@ class PropertyByAddressUpdaterV1(AbstractIndexUpdater):
         return {
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
-                'address_string': {'type': 'string', 'index': 'not_analyzed'},
+                'address_string': {'type': 'string', 'index': 'analyzed'},
                 'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
                                    'index': 'no'},
