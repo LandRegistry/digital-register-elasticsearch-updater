@@ -21,7 +21,18 @@ SEARCH_QUERY = {
 }
 
 
-def load_index_update_status(index_name, doc_type):
+def load_index_updater_status(index_updater):
+    LOGGER.info("Loading update status for '{}'".format(index_updater.id))
+    index_update_status = _retrieve_index_updater_status(
+        index_updater.index_name, index_updater.doc_type
+    )
+
+    index_updater.last_title_modification_date = index_update_status['last_modification_date']
+    index_updater.last_updated_title_number = index_update_status['last_updated_title_number']
+    LOGGER.info("Loaded update status for '{}'".format(index_updater.id))
+
+
+def _retrieve_index_updater_status(index_name, doc_type):
     _log_status_load_start(index_name, doc_type)
 
     try:
