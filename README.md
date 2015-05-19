@@ -45,7 +45,8 @@ The response should look similar to the following:
                 "is_busy": false,
                 "last_successful_sync_time": "2015-05-13T13:17:50.043+00",
                 "last_unsuccessful_sync_time": null,
-                "last_title_modification_date": "2015-05-13T13:10:33.392+00"
+                "last_title_modification_date": "2015-05-13T13:10:33.392+00",
+                "last_title_number": "AGL1234"
             },
             "property-by-postcode-v1-updater": {
                 "doc_type": "property_by_postcode",
@@ -53,7 +54,8 @@ The response should look similar to the following:
                 "is_busy": false,
                 "last_successful_sync_time": "2015-05-13T13:17:50.035+00",
                 "last_unsuccessful_sync_time": null,
-                "last_title_modification_date": "2015-05-13T13:10:33.392+00"
+                "last_title_modification_date": "2015-05-13T13:10:33.392+00",
+                "last_title_number": "AGL1234"
             },
             "property-by-postcode-v2-updater": {
                 "doc_type": "property_by_postcode_2",
@@ -61,7 +63,8 @@ The response should look similar to the following:
                 "is_busy": false,
                 "last_successful_sync_time": "2015-05-13T13:17:50.055+00",
                 "last_unsuccessful_sync_time": null,
-                "last_title_modification_date": "2015-05-13T13:10:33.392+00"
+                "last_title_modification_date": "2015-05-13T13:10:33.392+00",
+                "last_title_number": "AGL1234"
             }
         }
     }
@@ -78,3 +81,4 @@ are objects with the following fields:
     last_successful_sync_time - starting time of the last successful synchronisation
     last_unsuccessful_sync_time - starting time of the last unsuccessful synchronisation attempt
     last_title_modification_date - 'last_modified' date of the recently processed title
+    last_title_number - number of the recently processed title

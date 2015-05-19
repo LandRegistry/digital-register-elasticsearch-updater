@@ -37,6 +37,7 @@ class TestServer:
         mock_index_updater_1.last_successful_sync_time = datetime(2015, 4, 20, 10, 11, 12)
         mock_index_updater_1.last_unsuccessful_sync_time = datetime(2015, 4, 20, 12, 13, 14)
         mock_index_updater_1.last_title_modification_date = datetime(2015, 4, 21, 10, 11, 12)
+        mock_index_updater_1.last_updated_title_number = 'title1'
         mock_index_updater_1.last_sync_attempt_successful = True
         mock_index_updater_1.index_name = 'index1'
         mock_index_updater_1.doc_type = 'doctype1'
@@ -46,6 +47,7 @@ class TestServer:
         mock_index_updater_2.last_successful_sync_time = datetime(2015, 4, 22, 10, 11, 12)
         mock_index_updater_2.last_unsuccessful_sync_time = datetime(2015, 4, 22, 12, 13, 14)
         mock_index_updater_2.last_title_modification_date = datetime(2015, 4, 23, 10, 11, 12)
+        mock_index_updater_2.last_updated_title_number = 'title2'
         mock_index_updater_2.last_sync_attempt_successful = False
         mock_index_updater_2.index_name = 'index2'
         mock_index_updater_2.doc_type = 'doctype2'
@@ -67,7 +69,8 @@ class TestServer:
                         "is_busy": True,
                         "index_name": "index1",
                         "doc_type": "doctype1",
-                        "last_title_modification_date": "2015-04-21T10:11:12.000+00"
+                        "last_title_modification_date": "2015-04-21T10:11:12.000+00",
+                        "last_title_number": "title1",
                     },
                     "id2": {
                         "last_successful_sync_time": "2015-04-22T10:11:12.000+00",
@@ -75,7 +78,8 @@ class TestServer:
                         "is_busy": False,
                         "index_name": "index2",
                         "doc_type": "doctype2",
-                        "last_title_modification_date": "2015-04-23T10:11:12.000+00"
+                        "last_title_modification_date": "2015-04-23T10:11:12.000+00",
+                        "last_title_number": "title2",
                     },
                 }
             }
