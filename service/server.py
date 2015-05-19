@@ -62,6 +62,7 @@ def _get_updater_status(updater):
         'last_title_modification_date': _format_optional_date(
             updater.last_title_modification_date
         ),
+        'last_title_number': updater.last_updated_title_number,
         'is_busy': sync_manager.is_index_updater_busy(updater),
         'index_name': updater.index_name,
         'doc_type': updater.doc_type,
