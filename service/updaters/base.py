@@ -12,6 +12,12 @@ class AbstractIndexUpdater():
     __metaclass__ = ABCMeta
 
     _id = None
+    _index_name = None
+    _doc_type = None
+    _last_successful_sync_time = None
+    _last_unsuccessful_sync_time = None
+    _last_title_modification_date = None
+    _last_updated_title_number = None
 
     @property
     def id(self):
@@ -21,9 +27,49 @@ class AbstractIndexUpdater():
     def id(self, value):
         self._id = value
 
-    @abstractmethod
-    def initialise(self, index_name, doc_type):
-        pass
+    @property
+    def doc_type(self):
+        return self._doc_type
+
+    @property
+    def index_name(self):
+        return self._index_name
+
+    @property
+    def last_successful_sync_time(self):
+        return self._last_successful_sync_time
+
+    @last_successful_sync_time.setter
+    def last_successful_sync_time(self, value):
+        self._last_successful_sync_time = value
+
+    @property
+    def last_unsuccessful_sync_time(self):
+        return self._last_unsuccessful_sync_time
+
+    @last_unsuccessful_sync_time.setter
+    def last_unsuccessful_sync_time(self, value):
+        self._last_unsuccessful_sync_time = value
+
+    @property
+    def last_title_modification_date(self):
+        return self._last_title_modification_date
+
+    @last_title_modification_date.setter
+    def last_title_modification_date(self, value):
+        self._last_title_modification_date = value
+
+    @property
+    def last_updated_title_number(self):
+        return self._last_updated_title_number
+
+    @last_updated_title_number.setter
+    def last_updated_title_number(self, value):
+        self._last_updated_title_number = value
+
+    def __init__(self, index_name, doc_type):
+        self._index_name = index_name
+        self._doc_type = doc_type
 
     @abstractmethod
     def get_next_source_data_page(self, page_size):
@@ -32,10 +78,6 @@ class AbstractIndexUpdater():
     @abstractmethod
     def prepare_elasticsearch_actions(self, title):
         return []
-
-    @abstractmethod
-    def update_status(self, data_page):
-        pass
 
     @abstractmethod
     def get_mapping(self):

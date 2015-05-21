@@ -11,7 +11,7 @@ class TestEsStatusLoader:
         index_name = 'index_name_1'
         doc_type = 'doc_type_1'
 
-        es_status_loader.load_index_update_status(index_name, doc_type)
+        es_status_loader._retrieve_index_updater_status(index_name, doc_type)
 
         expected_search_query = {
             'filter': {
@@ -42,7 +42,7 @@ class TestEsStatusLoader:
         }]
 
         with mock.patch('service.es_utils.search', return_value=es_search_result):
-            result = es_status_loader.load_index_update_status('index_name', 'doc_type')
+            result = es_status_loader._retrieve_index_updater_status('index_name', 'doc_type')
 
             assert result == {
                 'last_modification_date': entry_datetime,
@@ -62,13 +62,13 @@ class TestEsStatusLoader:
         }]
 
         with mock.patch('service.es_utils.search', return_value=es_search_result):
-            result = es_status_loader.load_index_update_status('index_name', 'doc_type')
+            result = es_status_loader._retrieve_index_updater_status('index_name', 'doc_type')
 
             assert result['last_modification_date'] == expected_datetime
 
     @mock.patch('service.es_utils.search', return_value=None)
     def test_load_index_update_status_returns_defaults_when_no_title(self, mock_search):
-        result = es_status_loader.load_index_update_status('index_name', 'doc_type')
+        result = es_status_loader._retrieve_index_updater_status('index_name', 'doc_type')
 
         assert result == {
             'last_modification_date': datetime.min,
@@ -77,7 +77,7 @@ class TestEsStatusLoader:
 
     @mock.patch('service.es_utils.search', return_value=[{'_source': {}}])
     def test_load_index_update_status_returns_defaults_when_empty_record(self, mock_search):
-        result = es_status_loader.load_index_update_status('index_name', 'doc_type')
+        result = es_status_loader._retrieve_index_updater_status('index_name', 'doc_type')
 
         assert result == {
             'last_modification_date': datetime.min,
