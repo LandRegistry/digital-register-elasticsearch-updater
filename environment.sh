@@ -6,3 +6,4 @@ export ELASTICSEARCH_URI=http://localhost:9200
 export PAGE_SIZE=100
 export POLLING_INTERVAL_SECS=5
 export PYTHONPATH=.
+export FAULT_LOG_FILE_PATH='/var/log/applications/digital-register-elasticsearch-updater-fault.log'
