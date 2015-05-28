@@ -80,7 +80,12 @@ def _format_status(last_modification_date, last_updated_title_number):
 
 
 def _fix_datetime(datetime_string):
-    """Get date with 4 digit year, milliseconds and 4 digit timezone."""
+    """Get date with 4 digit year, milliseconds and 4 digit timezone.
+    >>> _fix_datetime('15-05-26T18:09:51+00')
+    '2015-05-26T18:09:51.000+0000'
+    >>> _fix_datetime('2015-05-26T18:09:51.000+0000')
+    '2015-05-26T18:09:51.000+0000'
+    """
     year_part, _, non_year_parts = datetime_string.partition('-')
     non_year_datetime_and_ms_parts, _, tz_part = non_year_parts.partition('+')
     non_year_datetime_part, _, ms_part = non_year_datetime_and_ms_parts.partition('.')
