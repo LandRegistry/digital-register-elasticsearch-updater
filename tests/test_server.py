@@ -64,21 +64,21 @@ class TestServer:
                 "polling_interval": CONFIG_DICT['POLLING_INTERVAL_SECS'],
                 "status": {
                     "id1": {
-                        "last_successful_sync_time": "2015-04-20T10:11:12.000+00",
-                        "last_unsuccessful_sync_time": "2015-04-20T12:13:14.000+00",
+                        "last_successful_sync_time": "2015-04-20T10:11:12.000+0000",
+                        "last_unsuccessful_sync_time": "2015-04-20T12:13:14.000+0000",
                         "is_busy": True,
                         "index_name": "index1",
                         "doc_type": "doctype1",
-                        "last_title_modification_date": "2015-04-21T10:11:12.000+00",
+                        "last_title_modification_date": "2015-04-21T10:11:12.000+0000",
                         "last_title_number": "title1",
                     },
                     "id2": {
-                        "last_successful_sync_time": "2015-04-22T10:11:12.000+00",
-                        "last_unsuccessful_sync_time": "2015-04-22T12:13:14.000+00",
+                        "last_successful_sync_time": "2015-04-22T10:11:12.000+0000",
+                        "last_unsuccessful_sync_time": "2015-04-22T12:13:14.000+0000",
                         "is_busy": False,
                         "index_name": "index2",
                         "doc_type": "doctype2",
-                        "last_title_modification_date": "2015-04-23T10:11:12.000+00",
+                        "last_title_modification_date": "2015-04-23T10:11:12.000+0000",
                         "last_title_number": "title2",
                     },
                 }
