@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import mock
 import pytest
 from service import es_status_loader
@@ -31,12 +31,13 @@ class TestEsStatusLoader:
         mock_search.assert_called_once_with(expected_search_query, index_name, doc_type)
 
     def test_load_index_update_status_returns_last_title_info(self):
-        entry_datetime = '2015-04-20 11:23:34'
+        entry_datetime_string = '2015-04-20T11:23:34.000+00'
+        expected_datetime = datetime(2015, 4, 20, 11, 23, 34, 0, timezone.utc)
         title_number = 'ABC123'
 
         es_search_result = [{
             '_source': {
-                'entry_datetime': entry_datetime,
+                'entry_datetime': entry_datetime_string,
                 'title_number': title_number
             }
         }]
@@ -45,18 +46,18 @@ class TestEsStatusLoader:
             result = es_status_loader._retrieve_index_updater_status('index_name', 'doc_type')
 
             assert result == {
-                'last_modification_date': entry_datetime,
+                'last_modification_date': expected_datetime,
                 'last_updated_title_number': title_number,
             }
 
     def test_load_index_update_status_converts_the_date_to_contain_four_digit_long_year(self):
-        entry_datetime = '15-04-20 11:23:34'
-        expected_datetime = '2015-04-20 11:23:34'
+        entry_datetime_string = '15-04-20T11:23:34.000+00'
+        expected_datetime = datetime(2015, 4, 20, 11, 23, 34, 0, timezone.utc)
         title_number = 'ABC123'
 
         es_search_result = [{
             '_source': {
-                'entry_datetime': entry_datetime,
+                'entry_datetime': entry_datetime_string,
                 'title_number': title_number
             }
         }]

@@ -74,7 +74,7 @@ class TestPropertyByAddressUpdaterV1:
         title_id = 'TTL1-ADDRESS_STRING_1'
         doc = {
             'title_number': 'TTL1',
-            'entry_datetime': '2015-04-20T12:23:34.000+00',
+            'entry_datetime': '2015-04-20T12:23:34.000+0000',
             'address_string': 'address string 1'
         }
 

@@ -74,7 +74,7 @@ class TestPropertyByPostcodeUpdaterV1:
         title_id = 'TTL1-SW112DR'
         doc = {
             'title_number': 'TTL1',
-            'entry_datetime': '2015-04-20T12:23:34.000+00',
+            'entry_datetime': '2015-04-20T12:23:34.000+0000',
             'postcode': 'SW112DR'
         }
 
