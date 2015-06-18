@@ -92,8 +92,8 @@ class TestPropertyByPostcodeUpdaterV3:
         entry_datetime = datetime(2015, 4, 20, 12, 23, 34)
         index_name = 'index_name1'
         doc_type = 'doc_type1'
-        register_data = {'address':
-            {
+        register_data = {
+            'address': {
                 'address_string': 'address string 12 SW11 2DR',
                 'street_name': 'street name',
                 'house_no': '15',
@@ -132,8 +132,8 @@ class TestPropertyByPostcodeUpdaterV3:
         entry_datetime = datetime(2015, 4, 20, 12, 23, 34)
         index_name = 'index_name1'
         doc_type = 'doc_type1'
-        register_data = {'address':
-            {
+        register_data = {
+            'address': {
                 'address_string': 'address string (SW11 2DR)',
             }
         }
@@ -143,6 +143,12 @@ class TestPropertyByPostcodeUpdaterV3:
             'title_number': 'TTL1',
             'entry_datetime': '2015-04-20T12:23:34.000+0000',
             'postcode': 'SW112DR',
+            'street_name': None,
+            'house_no': None,
+            'house_alpha': None,
+            'street_name_2': None,
+            'secondary_house_no': None,
+            'secondary_house_alpha': None,
             'first_number_in_address_string': None
         }
 

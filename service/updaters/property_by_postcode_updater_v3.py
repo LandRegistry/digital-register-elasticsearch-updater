@@ -57,20 +57,29 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
         def get_action(postcode):
             normalised_postcode = self._normalise_postcode(postcode)
             address = title.register_data['address']
-            first_number_in_address_string = self._first_number_not_in_postcode(address['address_string'])
+            first_number = self._first_number_not_in_postcode(address['address_string'])
             id = self._get_document_id(title.title_number, normalised_postcode)
-
+            house_no = address.get('house_no', None)
+            if house_no:
+                house_int = int(house_no)
+            else:
+                house_int = None
+            secondary_house_no = address.get('secondary_house_no', None)
+            if house_no:
+                secondary_house_int = int(secondary_house_no)
+            else:
+                secondary_house_int = None
             document = {
                 'title_number': title.title_number,
                 'entry_datetime': date_utils.format_date_with_millis(title.last_modified),
                 'postcode': normalised_postcode,
                 'street_name': address.get('street_name', None),
-                'house_no': address.get('house_no', None),
+                'house_no': house_int,
                 'house_alpha': address.get('house_alpha', None),
                 'street_name_2': address.get('street_name_2', None),
-                'secondary_house_no': address.get('secondary_house_no', None),
+                'secondary_house_no': secondary_house_int,
                 'secondary_house_alpha': address.get('secondary_house_alpha', None),
-                'first_number_in_address_string': first_number_in_address_string
+                'first_number_in_address_string': first_number
             }
 
             return es_utils.get_upsert_action(self.index_name, self.doc_type, document, id)
@@ -93,7 +102,12 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
         return None
 
     def _first_number_not_in_postcode(self, address_string):
-        return 1 #TODO
+        address_without_postcodes = re.sub(POSTCODE_REGEX, '', address_string)
+        numbers = re.findall(r'\d+', address_without_postcodes)
+        if numbers:
+            return int(numbers[0])
+        else:
+            return None
 
     def _normalise_postcode(self, postcode):
         return re.sub('\\s+', '', postcode)
