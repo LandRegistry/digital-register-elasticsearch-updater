@@ -65,7 +65,7 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
             else:
                 house_int = None
             secondary_house_no = address.get('secondary_house_no', None)
-            if house_no:
+            if secondary_house_no:
                 secondary_house_int = int(secondary_house_no)
             else:
                 secondary_house_int = None
