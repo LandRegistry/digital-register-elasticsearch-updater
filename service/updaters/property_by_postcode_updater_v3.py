@@ -32,13 +32,15 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
                 'postcode': {'type': 'string', 'index': 'not_analyzed'},
-                'street_name': {'type': 'string', 'index': 'no'},
-                'house_no': {'type': 'integer', 'index': 'no'},
-                'house_alpha': {'type': 'string', 'index': 'no'},
-                'street_name_2': {'type': 'string', 'index': 'no'},
-                'secondary_house_no': {'type': 'integer', 'index': 'no'},
-                'secondary_house_alpha': {'type': 'string', 'index': 'no'},
-                'first_number_in_address_string': {'type': 'integer', 'index': 'no'},
+                'street_name': {'type': 'string', 'index': 'not_analyzed'},
+                'house_no': {'type': 'integer', 'index': 'not_analyzed'},
+                'house_alpha': {'type': 'string', 'index': 'not_analyzed'},
+                'street_name_2': {'type': 'string', 'index': 'not_analyzed'},
+                'secondary_house_no': {'type': 'integer', 'index': 'not_analyzed'},
+                'secondary_house_alpha': {'type': 'string', 'index': 'not_analyzed'},
+                'sub_building_description': {'type': 'string', 'index': 'not_analyzed'},
+                'sub_building_no': {'type': 'string', 'index': 'not_analyzed'},
+                'first_number_in_address_string': {'type': 'integer', 'index': 'not_analyzed'},
                 'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
                                    'index': 'no'},
@@ -79,6 +81,8 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
                 'street_name_2': address.get('street_name_2', None),
                 'secondary_house_no': secondary_house_int,
                 'secondary_house_alpha': address.get('secondary_house_alpha', None),
+                'sub_building_description': address.get('secondary_house_alpha', None),
+                'sub_building_no': address.get('secondary_house_alpha', None),
                 'first_number_in_address_string': first_number
             }
 
