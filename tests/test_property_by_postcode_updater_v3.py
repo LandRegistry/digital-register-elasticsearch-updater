@@ -62,7 +62,6 @@ class TestPropertyByPostcodeUpdaterV3:
 
         assert returned_actions == [{'delete': 'action1'}]
 
-
     @mock.patch('service.es_utils.get_upsert_action', return_value={'upsert': 'action1'})
     def test_prepare_elasticsearch_actions_returns_upsert_action_when_title_open(
             self, mock_get_upsert_action):
@@ -97,7 +96,8 @@ class TestPropertyByPostcodeUpdaterV3:
             'secondary_house_alpha': 'A',
             'sub_building_no': 'unit 42',
             'sub_building_description': 'factory',
-            'first_number_in_address_string': 12
+            'first_number_in_address_string': 12,
+            'address_string': 'address string 12 SW11 2DR'
         }
 
         updater = PropertyByPostcodeUpdaterV3(index_name, doc_type)
@@ -133,7 +133,8 @@ class TestPropertyByPostcodeUpdaterV3:
             'secondary_house_alpha': None,
             'sub_building_no': None,
             'sub_building_description': None,
-            'first_number_in_address_string': None
+            'first_number_in_address_string': None,
+            'address_string': 'address string (SW11 2DR)'
         }
 
         updater = PropertyByPostcodeUpdaterV3(index_name, doc_type)
@@ -158,6 +159,7 @@ class TestPropertyByPostcodeUpdaterV3:
                 'sub_building_description': {'type': 'string', 'index': 'not_analyzed'},
                 'secondary_house_alpha': {'type': 'string', 'index': 'not_analyzed'},
                 'first_number_in_address_string': {'type': 'integer', 'index': 'not_analyzed'},
+                'address_string': {'type': 'string', 'index': 'not_analyzed'},
                 'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
                                    'index': 'no'}

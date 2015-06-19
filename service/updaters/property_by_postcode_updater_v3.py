@@ -41,6 +41,7 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
                 'sub_building_description': {'type': 'string', 'index': 'not_analyzed'},
                 'sub_building_no': {'type': 'string', 'index': 'not_analyzed'},
                 'first_number_in_address_string': {'type': 'integer', 'index': 'not_analyzed'},
+                'address_string': {'type': 'string', 'index': 'not_analyzed'},
                 'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
                                    'index': 'no'},
@@ -93,7 +94,8 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
                 'secondary_house_alpha': secondary_house_alpha,
                 'sub_building_description': address.get('sub_building_description', None),
                 'sub_building_no': address.get('sub_building_no', None),
-                'first_number_in_address_string': first_number
+                'first_number_in_address_string': first_number,
+                'address_string': address.get('address_string', None)
             }
 
             return es_utils.get_upsert_action(self.index_name, self.doc_type, document, id)
