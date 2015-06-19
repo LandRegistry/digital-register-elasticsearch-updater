@@ -62,28 +62,6 @@ class TestPropertyByPostcodeUpdaterV3:
 
         assert returned_actions == [{'delete': 'action1'}]
 
-    @mock.patch('service.es_utils.get_upsert_action', return_value={'upsert': 'action1'})
-    def test_prepare_elasticsearch_actions_returns_upsert_action_when_title_open(
-            self, mock_get_upsert_action):
-
-        entry_datetime = datetime(2015, 4, 20, 12, 23, 34)
-        index_name = 'index_name1'
-        doc_type = 'doc_type1'
-        register_data = {'address': {'address_string': 'address string 1 SW11 2DR'}}
-        updated_title = MockTitleRegisterData('TTL1', register_data, entry_datetime, False)
-        title_id = 'TTL1-SW112DR'
-        doc = {
-            'title_number': 'TTL1',
-            'entry_datetime': '2015-04-20T12:23:34.000+0000',
-            'postcode': 'SW112DR'
-        }
-
-        updater = PropertyByPostcodeUpdaterV3(index_name, doc_type)
-        returned_actions = updater.prepare_elasticsearch_actions(updated_title)
-
-        mock_get_upsert_action.assert_called_once_with(index_name, doc_type, doc, title_id)
-
-        assert returned_actions == [{'upsert': 'action1'}]
 
     @mock.patch('service.es_utils.get_upsert_action', return_value={'upsert': 'action1'})
     def test_prepare_elasticsearch_actions_returns_upsert_action_when_title_open(
@@ -100,7 +78,9 @@ class TestPropertyByPostcodeUpdaterV3:
                 'house_alpha': 'A',
                 'street_name_2': 'street name 2',
                 'secondary_house_no': '5',
-                'secondary_house_alpha': 'A'
+                'secondary_house_alpha': 'A',
+                'sub_building_no': 'unit 42',
+                'sub_building_description': 'factory'
             }
         }
         updated_title = MockTitleRegisterData('TTL1', register_data, entry_datetime, False)
@@ -115,6 +95,8 @@ class TestPropertyByPostcodeUpdaterV3:
             'street_name_2': 'street name 2',
             'secondary_house_no': 5,
             'secondary_house_alpha': 'A',
+            'sub_building_no': 'unit 42',
+            'sub_building_description': 'factory',
             'first_number_in_address_string': 12
         }
 
@@ -149,6 +131,8 @@ class TestPropertyByPostcodeUpdaterV3:
             'street_name_2': None,
             'secondary_house_no': None,
             'secondary_house_alpha': None,
+            'sub_building_no': None,
+            'sub_building_description': None,
             'first_number_in_address_string': None
         }
 
@@ -164,13 +148,16 @@ class TestPropertyByPostcodeUpdaterV3:
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
                 'postcode': {'type': 'string', 'index': 'not_analyzed'},
-                'street_name': {'type': 'string', 'index': 'no'},
-                'house_no': {'type': 'integer', 'index': 'no'},
-                'house_alpha': {'type': 'string', 'index': 'no'},
-                'street_name_2': {'type': 'string', 'index': 'no'},
-                'secondary_house_no': {'type': 'integer', 'index': 'no'},
-                'secondary_house_alpha': {'type': 'string', 'index': 'no'},
-                'first_number_in_address_string': {'type': 'integer', 'index': 'no'},
+                'street_name': {'type': 'string', 'index': 'not_analyzed'},
+                'house_no': {'type': 'integer', 'index': 'not_analyzed'},
+                'house_alpha': {'type': 'string', 'index': 'not_analyzed'},
+                'street_name_2': {'type': 'string', 'index': 'not_analyzed'},
+                'secondary_house_no': {'type': 'integer', 'index': 'not_analyzed'},
+                'secondary_house_alpha': {'type': 'string', 'index': 'not_analyzed'},
+                'sub_building_no': {'type': 'string', 'index': 'not_analyzed'},
+                'sub_building_description': {'type': 'string', 'index': 'not_analyzed'},
+                'secondary_house_alpha': {'type': 'string', 'index': 'not_analyzed'},
+                'first_number_in_address_string': {'type': 'integer', 'index': 'not_analyzed'},
                 'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
                                    'index': 'no'}
