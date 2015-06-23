@@ -8,7 +8,7 @@ MockTitleRegisterData = namedtuple(
 )
 
 
-class TestPropertyByPostcodeUpdaterV1:
+class TestPropertyByPostcodeUpdaterV2:
 
     def test_init_sets_index_information(self):
         updater = PropertyByPostcodeUpdaterV2('index123', 'doctype321')
