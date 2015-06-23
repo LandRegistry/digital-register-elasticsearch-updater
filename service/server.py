@@ -1,10 +1,12 @@
+from datetime import datetime
 import json
 import logging
 import os
 from flask import Response
 from config import CONFIG_DICT
 
-from service import sync_manager, app
+from service import sync_manager, app, es_utils
+from service.database import page_reader
 from service.date_utils import format_date_with_millis
 
 
@@ -26,9 +28,20 @@ def handleServerError(error):
     )
 
 
-@app.route('/', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def healthcheck():
-    return "OK"
+    errors = _check_elasticsearch_connection() + _check_postgresql_connection()
+    status, http_status = ('error', 500) if errors else ('ok', 200)
+
+    response_body = {'status': status}
+    if errors:
+        response_body['errors'] = errors
+
+    return Response(
+        json.dumps(response_body),
+        status=http_status,
+        mimetype=APPLICATION_JSON_TYPE,
+    )
 
 
 @app.route('/status', methods=['GET'])
@@ -74,6 +87,29 @@ def _format_optional_date(date):
         return format_date_with_millis(date)
     else:
         return None
+
+
+def _check_postgresql_connection():
+    """Checks PostgreSQL connection and returns a list of errors"""
+    try:
+        # Request a page of data just to see if the database responds properly
+        page_reader.get_next_data_page('', '2100-01-01', 1)
+        return []
+    except Exception as e:
+        error_message = 'Problem talking to PostgreSQL: {0}'.format(str(e))
+        return [error_message]
+
+
+def _check_elasticsearch_connection():
+    """Checks elasticsearch connection and returns a list of errors"""
+    try:
+        status = es_utils.get_cluster_info()['status']
+        if status == 200:
+            return []
+        else:
+            return ['Unexpected elasticsearch status: {}'.format(status)]
+    except Exception as e:
+        return ['Problem talking to elasticsearch: {0}'.format(str(e))]
 
 
 if not CONFIG_DICT.get('TESTING', False):

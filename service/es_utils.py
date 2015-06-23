@@ -63,3 +63,7 @@ def get_delete_action(index_name, doc_type, id):
         '_type': doc_type,
         '_id': id,
     }
+
+
+def get_cluster_info():
+    return elasticsearch_client.info()
