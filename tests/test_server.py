@@ -8,11 +8,6 @@ from service.server import app
 
 class TestServer:
 
-    def test_healthcheck_return_ok(self):
-        response = app.test_client().get('/')
-        assert response.status_code == 200
-        assert response.data.decode() == 'OK'
-
     @mock.patch('service.sync_manager.is_index_updater_busy', return_value=True)
     def test_status_calls_sync_maganger_for_data(self, mock_is_updater_busy):
         mock_index_updater_1 = mock.MagicMock()
@@ -92,3 +87,64 @@ class TestServer:
             response = app.test_client().get('/status')
             assert response.status_code == 500
             assert response.data.decode() == '{"error": "Internal server error"}'
+
+    @mock.patch('service.database.page_reader.get_next_data_page', return_value=None)
+    @mock.patch('service.server.es_utils.get_cluster_info', return_value={'status': 200})
+    def test_health_returns_200_response_when_data_stores_respond_properly(
+            self, mock_get_cluster_info, mock_get_next_data_page):
+
+        response = app.test_client().get('/health')
+        assert response.status_code == 200
+        assert response.data.decode() == '{"status": "ok"}'
+
+        mock_get_cluster_info.assert_called_once_with()
+        mock_get_next_data_page.assert_called_once_with('', '2100-01-01', 1)
+
+    @mock.patch('service.database.page_reader.get_next_data_page',
+                side_effect=Exception('Test PG exception'))
+    @mock.patch('service.server.es_utils.get_cluster_info', return_value={'status': 200})
+    def test_health_returns_500_response_when_pg_access_fails(
+            self, mock_get_cluster_info, mock_get_next_data_page):
+
+        response = app.test_client().get('/health')
+
+        assert response.status_code == 500
+        json_response = json.loads(response.data.decode())
+        assert json_response == {
+            'status': 'error',
+            'errors': ['Problem talking to PostgreSQL: Test PG exception'],
+        }
+
+    @mock.patch('service.database.page_reader.get_next_data_page', return_value=None)
+    @mock.patch('service.server.es_utils.get_cluster_info',
+                side_effect=Exception('Test ES exception'))
+    def test_health_returns_500_response_when_es_access_fails(
+            self, mock_get_cluster_info, mock_get_next_data_page):
+
+        response = app.test_client().get('/health')
+
+        assert response.status_code == 500
+        json_response = json.loads(response.data.decode())
+        assert json_response == {
+            'status': 'error',
+            'errors': ['Problem talking to elasticsearch: Test ES exception'],
+        }
+
+    @mock.patch('service.database.page_reader.get_next_data_page',
+                side_effect=Exception('Test PG exception'))
+    @mock.patch('service.server.es_utils.get_cluster_info',
+                side_effect=Exception('Test ES exception'))
+    def test_health_returns_500_response_with_multiple_errors_when_both_data_stores_fail(
+            self, mock_get_cluster_info, mock_get_next_data_page):
+
+        response = app.test_client().get('/health')
+
+        assert response.status_code == 500
+        json_response = json.loads(response.data.decode())
+        assert json_response == {
+            'status': 'error',
+            'errors': [
+                'Problem talking to elasticsearch: Test ES exception',
+                'Problem talking to PostgreSQL: Test PG exception',
+                ],
+            }
