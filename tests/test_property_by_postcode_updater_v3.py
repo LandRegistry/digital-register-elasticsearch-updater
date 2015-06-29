@@ -88,15 +88,7 @@ class TestPropertyByPostcodeUpdaterV3:
             'title_number': 'TTL1',
             'entry_datetime': '2015-04-20T12:23:34.000+0000',
             'postcode': 'SW112DR',
-            'street_name': 'street name',
-            'house_no': 15,
-            'house_alpha': 'A',
-            'street_name_2': 'street name 2',
-            'secondary_house_no': 5,
-            'secondary_house_alpha': 'A',
-            'sub_building_no': 'unit 42',
-            'sub_building_description': 'factory',
-            'first_number_in_address_string': 12,
+            'house_number_or_first_number': 15,
             'address_string': 'address string 12 SW11 2DR'
         }
 
@@ -125,15 +117,7 @@ class TestPropertyByPostcodeUpdaterV3:
             'title_number': 'TTL1',
             'entry_datetime': '2015-04-20T12:23:34.000+0000',
             'postcode': 'SW112DR',
-            'street_name': None,
-            'house_no': None,
-            'house_alpha': None,
-            'street_name_2': None,
-            'secondary_house_no': None,
-            'secondary_house_alpha': None,
-            'sub_building_no': None,
-            'sub_building_description': None,
-            'first_number_in_address_string': None,
+            'house_number_or_first_number': None,
             'address_string': 'address string (SW11 2DR)'
         }
 
@@ -149,16 +133,7 @@ class TestPropertyByPostcodeUpdaterV3:
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
                 'postcode': {'type': 'string', 'index': 'not_analyzed'},
-                'street_name': {'type': 'string', 'index': 'not_analyzed'},
-                'house_no': {'type': 'integer', 'index': 'not_analyzed'},
-                'house_alpha': {'type': 'string', 'index': 'not_analyzed'},
-                'street_name_2': {'type': 'string', 'index': 'not_analyzed'},
-                'secondary_house_no': {'type': 'integer', 'index': 'not_analyzed'},
-                'secondary_house_alpha': {'type': 'string', 'index': 'not_analyzed'},
-                'sub_building_no': {'type': 'string', 'index': 'not_analyzed'},
-                'sub_building_description': {'type': 'string', 'index': 'not_analyzed'},
-                'secondary_house_alpha': {'type': 'string', 'index': 'not_analyzed'},
-                'first_number_in_address_string': {'type': 'integer', 'index': 'not_analyzed'},
+                'house_number_or_first_number': {'type': 'integer', 'index': 'not_analyzed'},
                 'address_string': {'type': 'string', 'index': 'not_analyzed'},
                 'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
