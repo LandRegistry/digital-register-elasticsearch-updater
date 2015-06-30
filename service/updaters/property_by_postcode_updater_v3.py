@@ -32,19 +32,12 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
                 'postcode': {'type': 'string', 'index': 'not_analyzed'},
-                'street_name': {'type': 'string', 'index': 'not_analyzed'},
-                'house_no': {'type': 'integer', 'index': 'not_analyzed'},
-                'house_alpha': {'type': 'string', 'index': 'not_analyzed'},
-                'street_name_2': {'type': 'string', 'index': 'not_analyzed'},
-                'secondary_house_no': {'type': 'integer', 'index': 'not_analyzed'},
-                'secondary_house_alpha': {'type': 'string', 'index': 'not_analyzed'},
-                'sub_building_description': {'type': 'string', 'index': 'not_analyzed'},
-                'sub_building_no': {'type': 'string', 'index': 'not_analyzed'},
-                'first_number_in_address_string': {'type': 'integer', 'index': 'not_analyzed'},
+                'house_number_or_first_number': {'type': 'integer', 'index': 'not_analyzed'},
                 'address_string': {'type': 'string', 'index': 'not_analyzed'},
                 'entry_datetime': {'type': 'date',
                                    'format': 'date_time',
                                    'index': 'no'},
+
             }
         }
 
@@ -60,47 +53,32 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
         def get_action(postcode):
             normalised_postcode = self._normalise_postcode(postcode)
             address = title.register_data['address']
-            first_number = self._first_number_not_in_postcode(address['address_string'])
+            address_string = address['address_string']
             id = self._get_document_id(title.title_number, normalised_postcode)
             house_no = address.get('house_no', None)
-            if house_no and house_no.isdigit():
-                house_int = int(house_no)
-                house_alpha = address.get('house_alpha', None)
-            elif house_no:
-                house_int = None
-                house_alpha = house_no+address.get('house_alpha', '')
-            else:
-                house_int = None
-                house_alpha = address.get('house_alpha', None)
-            secondary_house_no = address.get('secondary_house_no', None)
-            if secondary_house_no and secondary_house_no.isdigit():
-                secondary_house_int = int(secondary_house_no)
-                secondary_house_alpha = address.get('secondary_house_alpha', None)
-            elif secondary_house_no:
-                secondary_house_int = None
-                secondary_house_alpha = secondary_house_no+address.get('secondary_house_alpha', '')
-            else:
-                secondary_house_int = None
-                secondary_house_alpha = address.get('secondary_house_alpha', None)
+            house_number_or_first_number = self._get_house_number_or_first_number(address_string,
+                                                                                  house_no)
+
             document = {
                 'title_number': title.title_number,
                 'entry_datetime': date_utils.format_date_with_millis(title.last_modified),
                 'postcode': normalised_postcode,
-                'street_name': address.get('street_name', None),
-                'house_no': house_int,
-                'house_alpha': house_alpha,
-                'street_name_2': address.get('street_name_2', None),
-                'secondary_house_no': secondary_house_int,
-                'secondary_house_alpha': secondary_house_alpha,
-                'sub_building_description': address.get('sub_building_description', None),
-                'sub_building_no': address.get('sub_building_no', None),
-                'first_number_in_address_string': first_number,
-                'address_string': address.get('address_string', None)
+                'house_number_or_first_number': house_number_or_first_number,
+                'address_string': self._normalise_address_string(address_string),
             }
 
             return es_utils.get_upsert_action(self.index_name, self.doc_type, document, id)
 
         return [get_action(postcode) for postcode in self._get_postcodes(title.register_data)]
+
+    def _get_house_number_or_first_number(self, address_string, house_no):
+        if house_no and house_no.isdigit():
+            return int(house_no)
+        else:
+            return self._first_number_not_in_postcode(address_string)
+
+    def _normalise_address_string(self, address_string):
+        return address_string.lower() if address_string else None
 
     def _get_document_id(self, title_number, postcode):
         return '{}-{}'.format(title_number, postcode.upper())

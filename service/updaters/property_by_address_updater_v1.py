@@ -62,5 +62,5 @@ class PropertyByAddressUpdaterV1(AbstractIndexUpdater):
 
     def _get_address_string(self, title):
         address_string = title.register_data['address']['address_string']
-        normalised_address_string = re.sub('[,()]', '', address_string)
+        normalised_address_string = re.sub('[,()]', '', address_string).lower()
         return normalised_address_string
