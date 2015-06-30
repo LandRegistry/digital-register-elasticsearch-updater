@@ -56,9 +56,8 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
             address_string = address['address_string']
             id = self._get_document_id(title.title_number, normalised_postcode)
             house_no = address.get('house_no', None)
-            house_number_or_first_number = self._get_house_number_or_first_number(
-                address_string, house_no
-            )
+            house_number_or_first_number = self._get_house_number_or_first_number(address_string,
+                                                                                  house_no)
 
             document = {
                 'title_number': title.title_number,
