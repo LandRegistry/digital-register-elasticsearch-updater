@@ -69,7 +69,7 @@ class TestPropertyByAddressUpdaterV1:
         entry_datetime = datetime(2015, 4, 20, 12, 23, 34)
         index_name = 'index_name1'
         doc_type = 'doc_type1'
-        register_data = {'address': {'address_string': 'address string 1'}}
+        register_data = {'address': {'address_string': 'ADDRESS string 1'}}
         updated_title = MockTitleRegisterData('TTL1', register_data, entry_datetime, False)
         title_id = 'TTL1-ADDRESS_STRING_1'
         doc = {

@@ -53,25 +53,33 @@ class PropertyByPostcodeUpdaterV3(AbstractIndexUpdater):
         def get_action(postcode):
             normalised_postcode = self._normalise_postcode(postcode)
             address = title.register_data['address']
-            first_number = self._first_number_not_in_postcode(address['address_string'])
+            address_string = address['address_string']
             id = self._get_document_id(title.title_number, normalised_postcode)
             house_no = address.get('house_no', None)
-            if house_no and house_no.isdigit():
-                house_number_or_first_number = int(house_no)
-                house_alpha = address.get('house_alpha', None)
-            else:
-                house_number_or_first_number = first_number
+            house_number_or_first_number = self._get_house_number_or_first_number(
+                address_string, house_no
+            )
+
             document = {
                 'title_number': title.title_number,
                 'entry_datetime': date_utils.format_date_with_millis(title.last_modified),
                 'postcode': normalised_postcode,
                 'house_number_or_first_number': house_number_or_first_number,
-                'address_string': address.get('address_string', None)
+                'address_string': self._normalise_address_string(address_string),
             }
 
             return es_utils.get_upsert_action(self.index_name, self.doc_type, document, id)
 
         return [get_action(postcode) for postcode in self._get_postcodes(title.register_data)]
+
+    def _get_house_number_or_first_number(self, address_string, house_no):
+        if house_no and house_no.isdigit():
+            return int(house_no)
+        else:
+            return self._first_number_not_in_postcode(address_string)
+
+    def _normalise_address_string(self, address_string):
+        return address_string.lower() if address_string else None
 
     def _get_document_id(self, title_number, postcode):
         return '{}-{}'.format(title_number, postcode.upper())

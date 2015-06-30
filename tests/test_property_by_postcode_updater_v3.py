@@ -71,15 +71,8 @@ class TestPropertyByPostcodeUpdaterV3:
         doc_type = 'doc_type1'
         register_data = {
             'address': {
-                'address_string': 'address string 12 SW11 2DR',
-                'street_name': 'street name',
                 'house_no': '15',
-                'house_alpha': 'A',
-                'street_name_2': 'street name 2',
-                'secondary_house_no': '5',
-                'secondary_house_alpha': 'A',
-                'sub_building_no': 'unit 42',
-                'sub_building_description': 'factory'
+                'address_string': 'ADDRESS string 12 SW11 2DR',
             }
         }
         updated_title = MockTitleRegisterData('TTL1', register_data, entry_datetime, False)
@@ -89,7 +82,7 @@ class TestPropertyByPostcodeUpdaterV3:
             'entry_datetime': '2015-04-20T12:23:34.000+0000',
             'postcode': 'SW112DR',
             'house_number_or_first_number': 15,
-            'address_string': 'address string 12 SW11 2DR'
+            'address_string': 'address string 12 sw11 2dr'
         }
 
         updater = PropertyByPostcodeUpdaterV3(index_name, doc_type)
@@ -108,7 +101,7 @@ class TestPropertyByPostcodeUpdaterV3:
         doc_type = 'doc_type1'
         register_data = {
             'address': {
-                'address_string': 'address string (SW11 2DR)',
+                'address_string': 'ADDRESS string (SW11 2DR)',
             }
         }
         updated_title = MockTitleRegisterData('TTL1', register_data, entry_datetime, False)
@@ -118,7 +111,7 @@ class TestPropertyByPostcodeUpdaterV3:
             'entry_datetime': '2015-04-20T12:23:34.000+0000',
             'postcode': 'SW112DR',
             'house_number_or_first_number': None,
-            'address_string': 'address string (SW11 2DR)'
+            'address_string': 'address string (sw11 2dr)'
         }
 
         updater = PropertyByPostcodeUpdaterV3(index_name, doc_type)
