@@ -1,17 +1,17 @@
 from collections import namedtuple
 from datetime import datetime
 import mock
-from service.updaters.property_by_postcode_updater_v1 import PropertyByPostcodeUpdaterV1
+from service.updaters.property_by_postcode_updater_v3 import PropertyByPostcodeUpdaterV3
 
 MockTitleRegisterData = namedtuple(
     "TitleRegisterData", ['title_number', 'register_data', 'last_modified', 'is_deleted']
 )
 
 
-class TestPropertyByPostcodeUpdaterV1:
+class TestPropertyByPostcodeUpdaterV3:
 
     def test_init_sets_index_information(self):
-        updater = PropertyByPostcodeUpdaterV1('index123', 'doctype321')
+        updater = PropertyByPostcodeUpdaterV3('index123', 'doctype321')
         assert updater.index_name == 'index123'
         assert updater.doc_type == 'doctype321'
 
@@ -21,7 +21,7 @@ class TestPropertyByPostcodeUpdaterV1:
         last_modification_date = datetime.now()
         page_size = 123
 
-        updater = PropertyByPostcodeUpdaterV1('index', 'doc_type')
+        updater = PropertyByPostcodeUpdaterV3('index', 'doctype')
         updater.last_title_modification_date = last_modification_date
         updater.last_updated_title_number = last_title_number
 
@@ -37,7 +37,7 @@ class TestPropertyByPostcodeUpdaterV1:
 
         with mock.patch('service.database.page_reader.get_next_data_page',
                         return_value=[title1, title2]):
-            updater = PropertyByPostcodeUpdaterV1('index', 'doctype')
+            updater = PropertyByPostcodeUpdaterV3('index', 'doctype')
             updater.last_title_modification_date = datetime.now()
             updater.last_updated_title_number = 'title123'
             result = updater.get_next_source_data_page(123)
@@ -53,9 +53,9 @@ class TestPropertyByPostcodeUpdaterV1:
         register_data = {'address': {'address_string': 'address string SW11 2DR'}}
 
         deleted_title = MockTitleRegisterData('TTL1', register_data, datetime.now(), True)
-        title_id = 'TTL1-SW11 2DR'
+        title_id = 'TTL1-SW112DR'
 
-        updater = PropertyByPostcodeUpdaterV1(index_name, doc_type)
+        updater = PropertyByPostcodeUpdaterV3(index_name, doc_type)
         returned_actions = updater.prepare_elasticsearch_actions(deleted_title)
 
         mock_get_delete_action.assert_called_once_with(index_name, doc_type, title_id)
@@ -69,16 +69,52 @@ class TestPropertyByPostcodeUpdaterV1:
         entry_datetime = datetime(2015, 4, 20, 12, 23, 34)
         index_name = 'index_name1'
         doc_type = 'doc_type1'
-        register_data = {'address': {'address_string': 'address string 1 SW11 2DR'}}
+        register_data = {
+            'address': {
+                'house_no': '15',
+                'address_string': 'ADDRESS string 12 SW11 2DR',
+            }
+        }
         updated_title = MockTitleRegisterData('TTL1', register_data, entry_datetime, False)
-        title_id = 'TTL1-SW11 2DR'
+        title_id = 'TTL1-SW112DR'
         doc = {
             'title_number': 'TTL1',
-            'entry_datetime': '15-04-20T12:23:34+00',
-            'postcode': 'SW11 2DR'
+            'entry_datetime': '2015-04-20T12:23:34.000+0000',
+            'postcode': 'SW112DR',
+            'house_number_or_first_number': 15,
+            'address_string': 'address string 12 sw11 2dr'
         }
 
-        updater = PropertyByPostcodeUpdaterV1(index_name, doc_type)
+        updater = PropertyByPostcodeUpdaterV3(index_name, doc_type)
+        returned_actions = updater.prepare_elasticsearch_actions(updated_title)
+
+        mock_get_upsert_action.assert_called_once_with(index_name, doc_type, doc, title_id)
+
+        assert returned_actions == [{'upsert': 'action1'}]
+
+    @mock.patch('service.es_utils.get_upsert_action', return_value={'upsert': 'action1'})
+    def test_prepare_elasticsearch_actions_returns_upsert_action_without_postcode_numbers(
+            self, mock_get_upsert_action):
+
+        entry_datetime = datetime(2015, 4, 20, 12, 23, 34)
+        index_name = 'index_name1'
+        doc_type = 'doc_type1'
+        register_data = {
+            'address': {
+                'address_string': 'ADDRESS string (SW11 2DR)',
+            }
+        }
+        updated_title = MockTitleRegisterData('TTL1', register_data, entry_datetime, False)
+        title_id = 'TTL1-SW112DR'
+        doc = {
+            'title_number': 'TTL1',
+            'entry_datetime': '2015-04-20T12:23:34.000+0000',
+            'postcode': 'SW112DR',
+            'house_number_or_first_number': None,
+            'address_string': 'address string (sw11 2dr)'
+        }
+
+        updater = PropertyByPostcodeUpdaterV3(index_name, doc_type)
         returned_actions = updater.prepare_elasticsearch_actions(updated_title)
 
         mock_get_upsert_action.assert_called_once_with(index_name, doc_type, doc, title_id)
@@ -86,13 +122,14 @@ class TestPropertyByPostcodeUpdaterV1:
         assert returned_actions == [{'upsert': 'action1'}]
 
     def test_get_mapping_returns_correct_mapping(self):
-        assert PropertyByPostcodeUpdaterV1('index', 'doctype').get_mapping() == {
+        assert PropertyByPostcodeUpdaterV3('index', 'doctype').get_mapping() == {
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
                 'postcode': {'type': 'string', 'index': 'not_analyzed'},
-                'entry_datetime': {
-                    'type': 'date',
-                    'format': 'date_time_no_millis',
-                    'index': 'no'},
-                }
+                'house_number_or_first_number': {'type': 'integer', 'index': 'not_analyzed'},
+                'address_string': {'type': 'string', 'index': 'not_analyzed'},
+                'entry_datetime': {'type': 'date',
+                                   'format': 'date_time',
+                                   'index': 'no'}
+            }
         }

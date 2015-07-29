@@ -4,6 +4,11 @@ export INDEX_CONFIG_FILE_PATH=index_updaters.json
 export LOGGING_CONFIG_FILE_PATH=logging_config.json
 export ELASTICSEARCH_URI=http://localhost:9200
 export PAGE_SIZE=100
+
+# Good values for POLLING_INTERVAL_SECS in different environments:
+# - Development/Integration: 5
+# - Preview/Production: 60
 export POLLING_INTERVAL_SECS=5
+
 export PYTHONPATH=.
 export FAULT_LOG_FILE_PATH='/var/log/applications/digital-register-elasticsearch-updater-fault.log'
