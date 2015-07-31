@@ -146,5 +146,5 @@ class TestServer:
             'errors': [
                 'Problem talking to elasticsearch: Test ES exception',
                 'Problem talking to PostgreSQL: Test PG exception',
-                ],
-            }
+            ],
+        }

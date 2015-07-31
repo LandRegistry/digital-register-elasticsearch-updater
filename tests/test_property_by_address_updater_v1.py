@@ -90,8 +90,6 @@ class TestPropertyByAddressUpdaterV1:
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
                 'address_string': {'type': 'string', 'index': 'analyzed'},
-                'entry_datetime': {'type': 'date',
-                                   'format': 'date_time',
-                                   'index': 'no'},
-                }
+                'entry_datetime': {'type': 'date', 'format': 'date_time', 'index': 'no'},
+            }
         }
