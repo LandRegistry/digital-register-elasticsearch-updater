@@ -1,10 +1,9 @@
-from datetime import datetime
 import json
 import logging
 import os
-from flask import Response
-from config import CONFIG_DICT
+from flask import Response  # type: ignore
 
+from config import CONFIG_DICT
 from service import sync_manager, app, es_utils
 from service.database import page_reader
 from service.date_utils import format_date_with_millis

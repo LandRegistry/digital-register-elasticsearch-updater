@@ -1,6 +1,7 @@
-from sqlalchemy.orm import Session, sessionmaker
-from service.database.model import TitleRegisterData
+from sqlalchemy.orm import Session, sessionmaker  # type: ignore
+
 from service import db
+from service.database.model import TitleRegisterData
 
 
 # If an updater needs to read data in a different way, it should use a different page reader

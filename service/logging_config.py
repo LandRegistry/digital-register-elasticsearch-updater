@@ -1,6 +1,7 @@
 import logging
-from logging import config
+from logging import config  # type: ignore
 import json
+
 from config import CONFIG_DICT
 
 done_setup = False

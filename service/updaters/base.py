@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
 # TODO: descriptions
+from datetime import datetime
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -11,13 +12,13 @@ class AbstractIndexUpdater():
 
     __metaclass__ = ABCMeta
 
-    _id = None
-    _index_name = None
-    _doc_type = None
-    _last_successful_sync_time = None
-    _last_unsuccessful_sync_time = None
-    _last_title_modification_date = None
-    _last_updated_title_number = None
+    _id = None                            # type: str
+    _index_name = None                    # type: str
+    _doc_type = None                      # type: str
+    _last_successful_sync_time = None     # type: datetime
+    _last_unsuccessful_sync_time = None   # type: datetime
+    _last_title_modification_date = None  # type: datetime
+    _last_updated_title_number = None     # type: str
 
     @property
     def id(self):

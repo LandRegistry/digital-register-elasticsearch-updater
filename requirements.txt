@@ -1,6 +1,7 @@
+APScheduler==3.0.2
 elasticsearch==1.4.0
 elasticsearch-dsl==0.0.3
 Flask==0.10.1
-sqlalchemy==0.9.8
+mypy-lang==0.2.0
 pg8000==1.10.1
-APScheduler==3.0.2
+sqlalchemy==0.9.8
