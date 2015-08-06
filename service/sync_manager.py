@@ -1,8 +1,8 @@
+from apscheduler.schedulers.background import BackgroundScheduler  # type: ignore
+from flask import json                                             # type: ignore
 import logging
 import threading
-
-from apscheduler.schedulers.background import BackgroundScheduler
-from flask import json
+from typing import Dict
 
 from config import CONFIG_DICT
 from service import synchroniser
@@ -18,8 +18,8 @@ UPDATER_STATUS_BUSY = "busy"
 UPDATER_STATUS_IDLE = "idle"
 updater_status_lock = threading.RLock()
 
-_updater_statuses = None
-_index_updaters = None
+_updater_statuses = None  # type: Dict[str, str]
+_index_updaters = None    # type: Dict[str, Dict[str, str]]
 _polling_interval_in_secs = CONFIG_DICT['POLLING_INTERVAL_SECS']
 
 scheduler = BackgroundScheduler()

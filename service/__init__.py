@@ -1,6 +1,7 @@
-import faulthandler
-from flask import Flask
-from sqlalchemy import create_engine
+import faulthandler                   # type: ignore
+from flask import Flask               # type: ignore
+from sqlalchemy import create_engine  # type: ignore
+
 from config import CONFIG_DICT
 from service import logging_config
 
