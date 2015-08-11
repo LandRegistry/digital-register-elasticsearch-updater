@@ -32,10 +32,8 @@ class PropertyByPostcodeUpdaterV2(AbstractIndexUpdater):
             'properties': {
                 'title_number': {'type': 'string', 'index': 'no'},
                 'postcode': {'type': 'string', 'index': 'not_analyzed'},
-                'entry_datetime': {'type': 'date',
-                                   'format': 'date_time',
-                                   'index': 'no'},
-                }
+                'entry_datetime': {'type': 'date', 'format': 'date_time', 'index': 'no'},
+            }
         }
 
     def _prepare_delete_actions(self, title):

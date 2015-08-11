@@ -1,7 +1,7 @@
+from elasticsearch import Elasticsearch         # type: ignore
+from elasticsearch.client import IndicesClient  # type: ignore
+from elasticsearch.helpers import bulk          # type: ignore
 import logging
-from elasticsearch import Elasticsearch
-from elasticsearch.client import IndicesClient
-from elasticsearch.helpers import bulk
 
 from config import CONFIG_DICT
 
