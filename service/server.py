@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 from flask import Response  # type: ignore
 
 from config import CONFIG_DICT
@@ -49,11 +48,6 @@ def healthcheck():
 def status():
     status_info = _get_status_of_all_updaters()
     return _json_response(json.dumps(status_info))
-
-
-def run_app():
-    port = int(os.environ.get('PORT', 8006))
-    app.run(host='0.0.0.0', port=port)
 
 
 def _json_response(body, status=200):
