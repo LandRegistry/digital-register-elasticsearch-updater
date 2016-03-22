@@ -1,9 +1,5 @@
 {
     "index_updaters": {
-        "property-by-postcode-v2-updater": {
-            "index_name": "landregistry",
-            "doc_type": "property_by_postcode_2"
-        },
         "property-by-postcode-v3-updater": {
             "index_name": "landregistry",
             "doc_type": "property_by_postcode_3"
