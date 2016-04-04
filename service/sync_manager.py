@@ -9,7 +9,6 @@ from service import synchroniser
 from service import es_status_loader
 from service import es_utils
 from service.updaters.property_by_address_updater_v1 import PropertyByAddressUpdaterV1
-from service.updaters.property_by_postcode_updater_v2 import PropertyByPostcodeUpdaterV2
 from service.updaters.property_by_postcode_updater_v3 import PropertyByPostcodeUpdaterV3
 
 
@@ -93,8 +92,6 @@ def _get_updater(updater_id, index_info):
     doc_type = index_info['doc_type']
 
     updater_creators = {
-        'property-by-postcode-v2-updater':
-            lambda: PropertyByPostcodeUpdaterV2(index_name, doc_type),
         'property-by-postcode-v3-updater':
             lambda: PropertyByPostcodeUpdaterV3(index_name, doc_type),
         'property-by-address-v1-updater':
